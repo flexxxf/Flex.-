@@ -5,8 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flex Esports</title>
 </head>
-<body style="margin:0;">
-  <div id="root"></div>
+<body style="margin:0; background:#0B0D10; font-family: -apple-system, sans-serif;">
+  <div id="root">
+    <div id="fallback-msg" style="color:#8B93A1; text-align:center; padding:60px 24px; font-size:14px;">
+      Cargando Flex Esports…
+    </div>
+  </div>
+
+  <script>
+    // Surfaces any loading/JS error directly on the page, since iPhone
+    // Safari doesn't give easy access to a console.
+    window.addEventListener("error", function (e) {
+      var el = document.getElementById("root");
+      if (el) {
+        el.innerHTML =
+          '<div style="color:#E4604B;background:#1A1D22;padding:20px;margin:16px;border-radius:8px;font-family:monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;">' +
+          '<b>Error al cargar Flex Esports:</b>\n\n' + (e.message || e) +
+          (e.filename ? '\n\narchivo: ' + e.filename + ':' + e.lineno : '') +
+          '</div>';
+      }
+    });
+    setTimeout(function () {
+      var f = document.getElementById("fallback-msg");
+      if (f) {
+        f.innerHTML =
+          'No terminó de cargar.<br><br>' +
+          'Posibles causas:<br>' +
+          '1) Espera 1-2 minutos más — GitHub Pages puede tardar en activarse la primera vez.<br>' +
+          '2) Revisa tu conexión — esta página necesita internet para cargar React desde unpkg.com.<br>' +
+          '3) Si esperaste y sigue igual, es probable que haya un error de código — recarga la página para ver si aparece un mensaje en rojo aquí arriba.';
+      }
+    }, 6000);
+  </script>
 
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -863,7 +893,12 @@ function ListEditor({ items, save, title, fields, render }) {
   );
 }
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<FlexEsportsBeta />);
+    try {
+      ReactDOM.createRoot(document.getElementById("root")).render(<FlexEsportsBeta />);
+    } catch (e) {
+      document.getElementById("root").innerHTML =
+        '<div style="color:#E4604B;background:#1A1D22;padding:20px;margin:16px;border-radius:8px;font-family:monospace;font-size:12px;white-space:pre-wrap;">Error al iniciar la app:\n\n' + e.message + '</div>';
+    }
   </script>
 </body>
 </html>
